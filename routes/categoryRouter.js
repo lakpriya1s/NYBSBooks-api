@@ -1,5 +1,6 @@
 const express = require("express");
 const authenticate = require("../authenticate");
+const cors = require("./cors");
 
 const categoryRouter = express.Router();
 
