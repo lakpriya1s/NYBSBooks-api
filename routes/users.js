@@ -13,6 +13,7 @@ userRouter.use(express.json());
 userRouter.options("*", cors.corsWithOptions, (req, res) => {
   res.sendStatus(200);
 });
+
 userRouter.get(
   "/",
   cors.corsWithOptions,
@@ -30,6 +31,7 @@ userRouter.get(
       .catch((err) => next(err));
   }
 );
+
 userRouter.post("/signup", cors.corsWithOptions, (req, res, next) => {
   User.register(
     new User({ username: req.body.username }),
@@ -59,6 +61,7 @@ userRouter.post("/signup", cors.corsWithOptions, (req, res, next) => {
     }
   );
 });
+
 userRouter.post("/login", cors.corsWithOptions, (req, res, next) => {
   passport.authenticate("local", (err, user, info) => {
     if (err) return next(err);
@@ -86,7 +89,7 @@ userRouter.post("/login", cors.corsWithOptions, (req, res, next) => {
       res.statusCode = 200;
       res.setHeader("Content-Type", "application/json");
       res.json({
-        success: false,
+        success: true,
         status: "Login Successful",
         token: token,
       });
