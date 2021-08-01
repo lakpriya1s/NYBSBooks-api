@@ -11,10 +11,10 @@ var userRouter = express.Router();
 userRouter.use(express.json());
 
 userRouter
-  .options(cors.corsWithOptions, (req, res) => {
+  .options("*", cors.corsWithOptions, (req, res) => {
     res.sendStatus(200);
   })
-  .get("/", cors.cors, authenticate.verifyUser, (req, res, next) => {
+  .get("/", cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
     Users.find({})
       .then(
         (user) => {
@@ -26,7 +26,7 @@ userRouter
       )
       .catch((err) => next(err));
   })
-  .post("/signup", cors.cors, (req, res, next) => {
+  .post("/signup", cors.corsWithOptions, (req, res, next) => {
     User.register(
       new User({ username: req.body.username }),
       req.body.password,
@@ -55,7 +55,7 @@ userRouter
       }
     );
   })
-  .post("/login", cors.cors, (req, res, next) => {
+  .post("/login", cors.corsWithOptions, (req, res, next) => {
     passport.authenticate("local", (err, user, info) => {
       if (err) return next(err);
       if (!user) {
@@ -89,7 +89,7 @@ userRouter
       });
     })(req, res, next);
   })
-  .get("/checkJWTToken", cors.cors, (req, res, next) => {
+  .get("/checkJWTToken", cors.corsWithOptions, (req, res, next) => {
     passport.authenticate("jwt", { session: false }, (err, user, info) => {
       if (err) return next(err);
       if (!user) {
