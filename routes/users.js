@@ -11,7 +11,7 @@ var userRouter = express.Router();
 userRouter.use(express.json());
 
 userRouter
-  .options("*", cors.corsWithOptions, (req, res) => {
+  .options(cors.cors, (req, res) => {
     res.sendStatus(200);
   })
   .get("/", cors.cors, authenticate.verifyUser, (req, res, next) => {
