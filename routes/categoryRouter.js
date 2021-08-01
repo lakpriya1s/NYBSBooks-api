@@ -7,7 +7,10 @@ const Categories = require("../models/categories");
 
 categoryRouter
   .route("/")
-  .get((req, res, next) => {
+  .options(cors.corsWithOptions, (req, res) => {
+    res.sendStatus(200);
+  })
+  .get(cors.cors, (req, res, next) => {
     Categories.find(req.query)
       .then(
         (category) => {
@@ -20,6 +23,7 @@ categoryRouter
       .catch((err) => next(err));
   })
   .post(
+    cors.cors,
     authenticate.verifyUser,
     authenticate.verifyAuthor,
     (req, res, next) => {
@@ -36,11 +40,12 @@ categoryRouter
         .catch((err) => next(err));
     }
   )
-  .put(authenticate.verifyUser, (req, res, next) => {
+  .put(cors.cors, authenticate.verifyUser, (req, res, next) => {
     res.statusCode = 403;
     res.end("PUT operation not supported on /dishes");
   })
   .delete(
+    cors.cors,
     authenticate.verifyUser,
     authenticate.verifyAdmin,
     (req, res, next) => {

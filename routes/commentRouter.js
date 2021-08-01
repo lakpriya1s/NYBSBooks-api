@@ -13,7 +13,10 @@ commentRouter.use(express.json());
 
 commentRouter
   .route("/")
-  .get((req, res, next) => {
+  .options(cors.corsWithOptions, (req, res) => {
+    res.sendStatus(200);
+  })
+  .get(cors.cors, (req, res, next) => {
     Comments.find(req.quary)
       .populate("user")
       .then(
@@ -26,7 +29,7 @@ commentRouter
       )
       .catch((err) => next(err));
   })
-  .post(authenticate.verifyUser, (req, res, next) => {
+  .post(cors.cors, authenticate.verifyUser, (req, res, next) => {
     if (req.body != null) {
       req.body.user = req.user._id;
       Comments.create(req.body)
@@ -49,7 +52,7 @@ commentRouter
       return next(err);
     }
   })
-  .put(authenticate.verifyUser, (req, res, next) => {
+  .put(cors.cors, authenticate.verifyUser, (req, res, next) => {
     res.statusCode = 403;
     res.end("PUT operation not supported on /comments");
   })
@@ -68,7 +71,10 @@ commentRouter
 
 commentRouter
   .route("/:commentId")
-  .get((req, res, next) => {
+  .options(cors.corsWithOptions, (req, res) => {
+    res.sendStatus(200);
+  })
+  .get(cors.cors, (req, res, next) => {
     Comments.findById(req.params.commentId)
       .then(
         (comment) => {
@@ -80,11 +86,11 @@ commentRouter
       )
       .catch((err) => next(err));
   })
-  .post(authenticate.verifyUser, (req, res, next) => {
+  .post(cors.cors, authenticate.verifyUser, (req, res, next) => {
     res.statusCode = 403;
     res.end("POST operation not supported on /comments" + req.params.commentId);
   })
-  .put(authenticate.verifyUser, (req, res, next) => {
+  .put(cors.cors, authenticate.verifyUser, (req, res, next) => {
     Comments.findById(req.params.commentId)
       .then(
         (comment) => {
@@ -126,7 +132,7 @@ commentRouter
       )
       .catch((err) => next(err));
   })
-  .delete(authenticate.verifyUser, (req, res, next) => {
+  .delete(cors.cors, authenticate.verifyUser, (req, res, next) => {
     Comments.findById(req.params.commentId)
       .then(
         (dish) => {
