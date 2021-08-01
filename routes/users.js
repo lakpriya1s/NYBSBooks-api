@@ -2,6 +2,8 @@ const express = require("express");
 var User = require("../models/user");
 var passport = require("passport");
 
+const cors = require("./cors");
+
 const Users = require("../models/user");
 const authenticate = require("../authenticate");
 
@@ -9,7 +11,7 @@ var userRouter = express.Router();
 userRouter.use(express.json());
 
 userRouter
-  .get("/", authenticate.verifyUser, (req, res, next) => {
+  .get("/", cors.corsWithOptions, authenticate.verifyUser, (req, res, next) => {
     Users.find({})
       .then(
         (user) => {
@@ -21,7 +23,7 @@ userRouter
       )
       .catch((err) => next(err));
   })
-  .post("/signup", (req, res, next) => {
+  .post("/signup", cors.corsWithOptions, (req, res, next) => {
     User.register(
       new User({ username: req.body.username }),
       req.body.password,
@@ -50,7 +52,7 @@ userRouter
       }
     );
   })
-  .post("/login", (req, res, next) => {
+  .post("/login", cors.corsWithOptions, (req, res, next) => {
     passport.authenticate("local", (err, user, info) => {
       if (err) return next(err);
       if (!user) {
@@ -84,7 +86,7 @@ userRouter
       });
     })(req, res, next);
   })
-  .get("/checkJWTToken", (req, res, next) => {
+  .get("/checkJWTToken", cors.corsWithOptions, (req, res, next) => {
     passport.authenticate("jwt", { session: false }, (err, user, info) => {
       if (err) return next(err);
       if (!user) {
