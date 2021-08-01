@@ -14,7 +14,7 @@ userRouter
   .options(cors.corsWithOptions, (req, res) => {
     res.sendStatus(200);
   })
-  .get("/", cors.cors, authenticate.verifyUser, (req, res, next) => {
+  .get("/", cors.corsOptions, authenticate.verifyUser, (req, res, next) => {
     Users.find({})
       .then(
         (user) => {
@@ -26,7 +26,7 @@ userRouter
       )
       .catch((err) => next(err));
   })
-  .post("/signup", cors.cors, (req, res, next) => {
+  .post("/signup", cors.corsOptions, (req, res, next) => {
     User.register(
       new User({ username: req.body.username }),
       req.body.password,
@@ -55,7 +55,7 @@ userRouter
       }
     );
   })
-  .post("/login", cors.cors, (req, res, next) => {
+  .post("/login", cors.corsOptions, (req, res, next) => {
     passport.authenticate("local", (err, user, info) => {
       if (err) return next(err);
       if (!user) {
